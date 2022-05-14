@@ -8,18 +8,44 @@
 // 웹 서버 상에서 사용자 프로그램을 동작시키기 위한 조합이다.
 int main(void) {
   char *buf, *p;
-  char arg1[MAXLINE], arg2[MAXLINE], content[MAXLINE];
+  // 👇 11.10
+  char arg1[MAXLINE], arg2[MAXLINE], content[MAXLINE], arg3[MAXLINE], arg4[MAXLINE];
   int n1 =0, n2 =0;
-
   // Extract the two arguments
-  if((buf == getenv("QUERY_STRING")) != NULL){
+  // 👇 11.10
+  if ((buf = getenv("QUERY_STRING")) != NULL) {
     p = strchr(buf, '&');
-    *p = '\0';
+    *p = '\0'; // 👈 이거 도대체 뭔데?
     strcpy(arg1, buf);
     strcpy(arg2, p+1);
-    n1 = atoi(arg1);
-    n2 = atoi(arg2);
+    // arg1문자열에서 =을 찾아라
+    p = strchr(arg1, '=');
+    *p = '\0';
+    // arg1 문자열에서 =뒤에 있는 모든 문자 
+    // ex) arg1 : num1=13 -> 13
+    strcpy(arg3, p+1);
+
+    p = strchr(arg2, '=');
+    *p = '\0';
+    strcpy(arg4, p+1);
+
+    n1 = atoi(arg3);
+    n2 = atoi(arg4);
   }
+  // char arg1[MAXLINE], arg2[MAXLINE], content[MAXLINE];
+  // int n1 =0, n2 =0;
+  // printf("#########################################\n");
+  // printf("I'm IN adder.c\n");
+  // printf("#########################################\n");
+  // // Extract the two arguments
+  // if((buf == getenv("QUERY_STRING")) != NULL){
+  //   p = strchr(buf, '&');
+  //   *p = '\0';
+  //   strcpy(arg1, buf);
+  //   strcpy(arg2, p+1);
+  //   n1 = atoi(arg1);
+  //   n2 = atoi(arg2);
+  // }
 
   // Make the response body
   sprintf(content, "QUERY_STRING=%s", buf);
